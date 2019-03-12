@@ -222,7 +222,6 @@ class DevelopActivity(activity.Activity):
         hbox.pack2(self.editor, resize=True, shrink=True)
         self.set_canvas(hbox)
         hbox.show()
-        logging.critical('finished initialization')
         self.activity_dir = None
         self.show()
 
