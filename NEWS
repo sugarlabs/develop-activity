@@ -1,3 +1,14 @@
+44
+Update licenseslicense
+Update skeleton sources
+Fix PyGObject warnings
+Fix metadata
+Add README
+Update screenshots
+Remove initialisation message from log
+Port to Python 3
+Update Ninja IDE
+
 39
 Handle API chages in 8.2
 Use gnomevfs and not gio
