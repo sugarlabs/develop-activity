@@ -25,7 +25,6 @@ from gi.repository import GtkSource
 import os.path
 import re
 import mimetypes
-from exceptions import ValueError, TypeError, IOError, OSError
 
 from sugar3 import profile
 from sugar3.graphics.icon import Icon
@@ -206,7 +205,7 @@ class GtkSourceview2Editor(Gtk.Notebook):
 
     def replace(self, ftext, rtext, s_opts):
         replaced = False
-        if s_opts.use_regex and issubclass(type(ftext), basestring):
+        if s_opts.use_regex and issubclass(type(ftext), str):
             ftext = re.compile(ftext)
         multifile = (s_opts.where == S_WHERE.multifile)
         if multifile and s_opts.replace_all:
@@ -352,7 +351,7 @@ class GtkSourceview2Page(GtkSource.View):
         Load the text, and optionally scroll to the given offset in the file.
         '''
         self.text_buffer.begin_not_undoable_action()
-        _file = file(self.full_path)
+        _file = open(self.full_path, 'r')
         self.text_buffer.set_text(_file.read())
         _file.close()
         if offset is not None:
@@ -381,7 +380,7 @@ class GtkSourceview2Page(GtkSource.View):
             buff = self.text_buffer
             text = buff.get_text(buff.get_start_iter(), buff.get_end_iter(),
                                  False)
-            _file = file(self.full_path, 'w')
+            _file = open(self.full_path, 'w')
             try:
                 _file.write(text)
             except (IOError, OSError):

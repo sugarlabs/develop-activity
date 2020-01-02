@@ -30,7 +30,7 @@ def activity_info_template(name, web_activity=False):
     if web_activity:
         exec_line = 'sugar-activity-web'
     else:
-        exec_line = 'sugar-activity activity.HelloWorldActivity'
+        exec_line = 'sugar-activity3 activity.HelloWorldActivity'
 
     return """[Activity]
 name = %s
@@ -43,9 +43,20 @@ show_launcher = yes
 
 
 def create_activity(name, base_path, skeleton):
-    path = os.path.expanduser(os.path.join(base_path,
-                              '%s.activity' % name.replace(' ', '')))
-    os.makedirs(path)
+    revision = 0
+    while True:
+        try:
+            if revision == 0:
+                revision_string = ""
+            else:
+                revision_string = str(revision)
+            path = os.path.expanduser(os.path.join(base_path,
+                '{}{}.activity'.format(name.replace(' ', ''), revision_string)))
+            os.makedirs(path)
+            break
+        except FileExistsError:
+            logging.warning('{} activity folder already exists. Trying to create:{}'.format(path, name.replace(' ', '')+str(revision+1)))
+            revision += 1
     activity_path = os.path.join(path, 'activity')
     os.mkdir(activity_path)
 
