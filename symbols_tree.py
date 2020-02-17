@@ -68,7 +68,7 @@ class SymbolsTree(Gtk.TreeView):
         model, iter = selection.get_selected()
         if iter is not None:
             line = model.get_value(iter, 2)
-            if line is 0:
+            if line == 0:
                 return
             self.emit('symbol-selected', line)
 
