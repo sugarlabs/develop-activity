@@ -185,11 +185,15 @@ class WelcomePage(Gtk.EventBox):
         self.show_all()
 
     def _load_activities_installed_combo(self, activities_combo):
-        for dir_name in sorted(os.listdir(activities_path)):
+        for path in [activities_path, '/usr/share/sugar/activities']:
+            self._load(activities_combo, path)
+
+    def _load(self, activities_combo, path):
+        for dir_name in sorted(os.listdir(path)):
             if dir_name.endswith('.activity'):
                 activity_name = dir_name[:- len('.activity')]
                 # search the icon
-                info_file_name = os.path.join(activities_path, dir_name,
+                info_file_name = os.path.join(path, dir_name,
                                               'activity/activity.info')
                 try:
                     info_file = open(info_file_name, 'r')
@@ -201,9 +205,10 @@ class WelcomePage(Gtk.EventBox):
                     icon_file_name = None
                     if icon_name is not None:
                         icon_file_name = os.path.join(
-                            activities_path, dir_name, 'activity',
+                            path, dir_name, 'activity',
                             '%s.svg' % icon_name)
-                    activities_combo.append_item(0, activity_name,
+                    activities_combo.append_item(os.path.join(path, dir_name),
+                                                 activity_name,
                                                  file_name=icon_file_name)
                 except:
                     logging.error('Error trying to read information about %s',
@@ -239,9 +244,8 @@ class WelcomePage(Gtk.EventBox):
         else:
             selected = combo_activities.get_active_iter()
             activity_name = combo_activities.get_model().get_value(selected, 1)
-            logging.error('Activity selected %s', activity_name)
-            activity_dir = os.path.join(activities_path,
-                                        "%s.activity" % activity_name)
+            activity_dir = combo_activities.get_value()
+            logging.error('Activity selected %s aka %s', activity_name, activity_dir)
             self.emit('open-activity', activity_dir)
 
 
